@@ -11,25 +11,35 @@ export abstract class BasicGame {
   public camera: THREE.Camera
   public scene = new THREE.Scene()
   public renderer = new THREE.WebGLRenderer()
+  public canvas: HTMLCanvasElement
 
   constructor(config: GameConfig) {
     this.config = config
     this.renderer.setSize(this.config.width, this.config.height)
-    document.body.appendChild(this.renderer.domElement)
-    this.animate(new Date().getTime())
+    this.canvas = this.renderer.domElement
+    document.body.appendChild(this.canvas)
+    this.init()
+    this._render()
   }
 
+  private _render() {
+    this.render()
+    this.renderer.render(this.scene, this.camera)
+    requestAnimationFrame(() => this.animate(new Date().getTime()))
+  }
+
+  abstract init(): void
   abstract render(): void
+  abstract update(): void
 
   animate(lastFrameTime: number = 0) {
-    const now = new Date().getTime()
-    const deltaTime = now - lastFrameTime
+    const deltaTime = new Date().getTime() - lastFrameTime
     if (deltaTime >= 1000 / this.config.fps) {
-      this.render()
-      this.renderer.render(this.scene, this.camera)
-      requestAnimationFrame(() => this.animate(now))
+      this.update()
+      this._render()
       return
     }
+    this.update()
     requestAnimationFrame(() => this.animate(lastFrameTime))
   }
 }

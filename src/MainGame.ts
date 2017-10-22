@@ -1,13 +1,19 @@
 import * as THREE from 'three'
-import { BasicGame, GameConfig } from './BasicGame'
+import { BasicGame } from './BasicGame'
 
 export class MainGame extends BasicGame {
   cube: THREE.Object3D
+  moving: boolean
 
-  constructor(config: GameConfig) {
-    super(config)
-
+  init() {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    document.addEventListener('keydown', (e) => {
+      this.moving = true
+    })
+
+    document.addEventListener('keyup', (e) => {
+      this.moving = false
+    })
     this.buildScene()
   }
 
@@ -19,8 +25,12 @@ export class MainGame extends BasicGame {
     this.scene.add(this.cube)
   }
 
-  render() {
-    this.cube.rotation.x += 0.01
-    this.cube.rotation.y += 0.01
+  render() {}
+
+  update() {
+    this.cube.translateOnAxis(new THREE.Vector3(0, 0, -1), 0.01)
+    if (this.moving) {
+      this.camera.translateOnAxis(new THREE.Vector3(0, 0, -1), 0.03)
+    }
   }
 }
