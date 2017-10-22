@@ -1,36 +1,38 @@
 import * as THREE from 'three'
+import { getMaze, getFloorDiagonal } from './mazeParser/mazeParser'
 import { BasicGame } from './BasicGame'
+import { MovementManager } from './MovementManager'
+import { MeshWallGenerator } from './MeshWallGenerator'
 
 export class MainGame extends BasicGame {
-  cube: THREE.Object3D
-  moving: boolean
+  movement: MovementManager
 
   init() {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    document.addEventListener('keydown', (e) => {
-      this.moving = true
-    })
-
-    document.addEventListener('keyup', (e) => {
-      this.moving = false
-    })
+    this.camera.position.y = 0.5
+    this.camera.position.x = 17
+    this.camera.position.z = 32
+    this.movement = new MovementManager(this.camera)
     this.buildScene()
   }
 
   buildScene() {
-    this.camera.position.z = 5
-    var geometry = new THREE.BoxGeometry(1, 1, 1)
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    this.cube = new THREE.Mesh(geometry, material)
-    this.scene.add(this.cube)
+    const wallGenerator = new MeshWallGenerator(1.5)
+    const ambientLight = new THREE.AmbientLight(0x0c0c0c, 20)
+    const mazeLines = getMaze(2, 0.1)
+
+    const floor = wallGenerator.generateFloor(getFloorDiagonal(mazeLines))
+    const ceiling = wallGenerator.generateCeiling(getFloorDiagonal(mazeLines))
+    const walls = mazeLines.map(line => {
+      return wallGenerator.generateWall(line)
+    })
+
+    this.scene.add(...walls, floor, ceiling, ambientLight)
   }
 
   render() {}
 
   update() {
-    this.cube.translateOnAxis(new THREE.Vector3(0, 0, -1), 0.01)
-    if (this.moving) {
-      this.camera.translateOnAxis(new THREE.Vector3(0, 0, -1), 0.03)
-    }
+    this.movement.update()
   }
 }
