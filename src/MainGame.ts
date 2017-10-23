@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { getMaze, getFloorDiagonal } from './mazeParser/mazeParser'
 import { BasicGame } from './BasicGame'
 import { MovementManager } from './MovementManager'
-import { MeshWallGenerator } from './MeshWallGenerator'
+import { BoxWallGenerator } from './BoxWallGenerator'
 
 export class MainGame extends BasicGame {
   movement: MovementManager
@@ -17,7 +17,7 @@ export class MainGame extends BasicGame {
   }
 
   buildScene() {
-    const wallGenerator = new MeshWallGenerator(1.5)
+    const wallGenerator = new BoxWallGenerator(1.5)
     const ambientLight = new THREE.AmbientLight(0x0c0c0c, 20)
     const mazeLines = getMaze(2, 0.1)
 
@@ -30,9 +30,9 @@ export class MainGame extends BasicGame {
     this.scene.add(...walls, floor, ceiling, ambientLight)
   }
 
-  render() {}
-
-  update() {
-    this.movement.update()
+  render() {
+    this.movement.render()
   }
+
+  update() {}
 }

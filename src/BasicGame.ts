@@ -28,8 +28,8 @@ export abstract class BasicGame {
     requestAnimationFrame(() => this.animate(new Date().getTime()))
   }
 
-  abstract init(): void
   abstract render(): void
+  abstract init(): void
   abstract update(): void
 
   animate(lastFrameTime: number = 0) {
