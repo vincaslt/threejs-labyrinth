@@ -27,7 +27,10 @@ export class MainGame extends BasicGame {
       return wallGenerator.generateWall(line)
     })
 
-    this.scene.add(...walls, floor, ceiling, ambientLight)
+    var light = new THREE.PointLight(0x00ff00, 1, 10)
+    light.position.set(17, 1, 31)
+
+    this.scene.add(...walls, floor, ceiling, ambientLight, light)
   }
 
   render() {
