@@ -2,13 +2,6 @@ import * as THREE from 'three'
 import { AbstractWallGenerator } from './AbstractWallGenerator'
 
 export class MeshWallGenerator extends AbstractWallGenerator {
-  wallHeight: number
-
-  constructor(wallHeight = 1) {
-    super()
-    this.wallHeight = wallHeight
-  }
-
   generateWall(line: Line) {
     const geom = new THREE.Geometry()
     geom.vertices.push(new THREE.Vector3(line.x1, 0, line.y1))
@@ -23,19 +16,19 @@ export class MeshWallGenerator extends AbstractWallGenerator {
     geom.faces.push(new THREE.Face3(3, 4, 5))
     geom.computeFaceNormals()
 
-    const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide })
-    return new THREE.Mesh(geom, material)
+    const material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide })
+    return [new THREE.Mesh(geom, material)]
   }
 
   generateCeiling(diagonal: Line) {
-    return this.generatePlain(diagonal, this.wallHeight, 0xcece22)
+    return this.generatePlane(diagonal, this.wallHeight, 0xcece22)
   }
 
   generateFloor(diagonal: Line) {
-    return this.generatePlain(diagonal)
+    return this.generatePlane(diagonal)
   }
 
-  generatePlain(diagonal: Line, y = 0, color: number = 0x333333) {
+  generatePlane(diagonal: Line, y = 0, color: number = 0x333333) {
     const geom = new THREE.Geometry()
     geom.vertices.push(new THREE.Vector3(diagonal.x1, y, diagonal.y1))
     geom.vertices.push(new THREE.Vector3(diagonal.x2, y, diagonal.y1))
