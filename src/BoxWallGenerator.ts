@@ -26,13 +26,14 @@ export class BoxWallGenerator extends AbstractWallGenerator {
     if (!fillerExists && !fillerIntersects) {
       const geom = new THREE.BoxGeometry(
         THICK,
-        this.wallHeight * 2,
+        this.wallHeight,
         THICK
       )
-      const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide })
+      const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
       const filler = new THREE.Mesh(geom, material)
       filler.position.x = x
       filler.position.z = z
+      filler.position.y = 0 + this.wallHeight / 2
       this.fillerPositions.push({ x, z })
       return filler
     }
@@ -47,38 +48,15 @@ export class BoxWallGenerator extends AbstractWallGenerator {
     let z = Math.min(line.y1, line.y2) + l / 2
     const geom = new THREE.BoxGeometry(
       Math.max(w - THICK * 2, THICK),
-      this.wallHeight * 2,
+      this.wallHeight,
       Math.max(l - THICK * 2, THICK)
     )
-    const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide })
+    const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
     const wall = new THREE.Mesh(geom, material)
     wall.position.x = x
+    wall.position.y = 0 + this.wallHeight / 2
     wall.position.z = z
 
     return [wall, this.generateFiller(line, true), this.generateFiller(line)]
-  }
-
-  generateCeiling(diagonal: Line) {
-    return this.generatePlane(diagonal, this.wallHeight, 0xcece22)
-  }
-
-  generateFloor(diagonal: Line) {
-    return this.generatePlane(diagonal)
-  }
-
-  generatePlane(diagonal: Line, y = 0, color: number = 0x333333) {
-    const geom = new THREE.Geometry()
-    geom.vertices.push(new THREE.Vector3(diagonal.x1, y, diagonal.y1))
-    geom.vertices.push(new THREE.Vector3(diagonal.x2, y, diagonal.y1))
-    geom.vertices.push(new THREE.Vector3(diagonal.x2, y, diagonal.y2))
-
-    geom.vertices.push(new THREE.Vector3(diagonal.x1, y, diagonal.y1))
-    geom.vertices.push(new THREE.Vector3(diagonal.x1, y, diagonal.y2))
-    geom.vertices.push(new THREE.Vector3(diagonal.x2, y, diagonal.y2))
-    geom.faces.push(new THREE.Face3(0, 1, 2))
-    geom.faces.push(new THREE.Face3(3, 4, 5))
-    geom.computeFaceNormals()
-    const material = new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide })
-    return new THREE.Mesh(geom, material)
   }
 }

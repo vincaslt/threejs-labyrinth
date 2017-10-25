@@ -27,20 +27,12 @@ export class MainGame extends BasicGame {
     // const ceiling = wallGenerator.generateCeiling(getFloorDiagonal(mazeLines))
     const walls = wallGenerator.generateWalls()
 
-    const material = new THREE.SpriteMaterial({
-      color: 0xFF0000,
-    })
+    var sphere = new THREE.SphereGeometry(0.1, 16, 8)
+    var light = new THREE.PointLight(0xFF0000, 3, 5)
+    light.add(new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({ color: 0xff0000 })))
+    light.position.set(0, 0.5, 30)
 
-    const particle = new THREE.Sprite(material)
-    particle.position.x = 14
-    particle.position.y = 0.5
-    particle.position.z = 30
-    particle.scale.x = particle.scale.y = 0.1
-
-    var light = new THREE.PointLight(0x00ff00, 1, 50)
-    light.position.set(14, 0.5, 30)
-
-    this.scene.add(...walls, floor, ambientLight, light, particle)
+    this.scene.add(...walls, ...floor, light, ambientLight)
   }
 
   render() {
