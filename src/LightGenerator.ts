@@ -9,11 +9,6 @@ export class LightGenerator {
       light.castShadow = true
       light.shadow.bias = -0.001
 
-      var geometry = new THREE.SphereGeometry(1, 12, 6)
-      var material = new THREE.MeshBasicMaterial({ color: 0x111111 })
-      var sphere = new THREE.Mesh(geometry, material)
-      light.add(sphere)
-
       return light
     })
   }

@@ -11,7 +11,7 @@ export abstract class AbstractWallGenerator {
   public abstract generateWall(line: Line): THREE.Mesh[]
 
   generateCeiling(diagonal: Line) {
-    return this.generatePlane(diagonal, this.wallHeight, 0xcece22)
+    return this.generatePlane(diagonal, this.wallHeight, 0x7f1ae5)
   }
 
   generateFloor(diagonal: Line) {
