@@ -22,7 +22,7 @@ export class MovementManager {
 
   constructor(camera: THREE.Camera) {
     this.camera = camera
-    document.addEventListener('keydown', (e) => this.handleKeyPress(e, 0.05))
+    document.addEventListener('keydown', (e) => this.handleKeyPress(e, 1))
     document.addEventListener('keyup', (e) => this.handleKeyPress(e, 0))
   }
 
@@ -41,10 +41,13 @@ export class MovementManager {
         this.movement.right = speed
         break
       case 'a':
-        this.movement.rotateLeft = speed
+        this.movement.rotateLeft = speed * 0.05
         break
       case 'd':
-        this.movement.rotateRight = speed
+        this.movement.rotateRight = speed * 0.05
+        break
+      case 'Enter':
+        console.log(this.camera.position.toArray())
         break
     }
   }

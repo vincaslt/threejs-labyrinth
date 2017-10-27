@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { AbstractWallGenerator } from './AbstractWallGenerator'
 
-const THICK = 0.2
+const THICK = 2
 
 export class BoxWallGenerator extends AbstractWallGenerator {
   fillerPositions: { x: number, z: number }[] = []
@@ -27,7 +27,8 @@ export class BoxWallGenerator extends AbstractWallGenerator {
       const geom = new THREE.BoxGeometry(
         THICK,
         this.wallHeight,
-        THICK
+        THICK,
+        5, 5, 5
       )
       const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
       const filler = new THREE.Mesh(geom, material)

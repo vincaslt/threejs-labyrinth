@@ -18,30 +18,16 @@ export abstract class AbstractWallGenerator {
     return this.generatePlane(diagonal)
   }
 
-  generatePlane(diagonal: Line, y0 = 0, color: number = 0x888888) {
-    const vertices: THREE.Mesh[] = []
+  generatePlane(diagonal: Line, y = 0, color: number = 0x888888) {
     const material = new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide })
-    const h = 0.5
-    for (let x = Math.min(diagonal.x1, diagonal.x2); x <= Math.max(diagonal.x1, diagonal.x2); x += h) {
-      for (let z = Math.min(diagonal.y1, diagonal.y2); z <= Math.max(diagonal.y1, diagonal.y2); z += h) {
-        const geom = new THREE.Geometry()
-        geom.vertices.push(new THREE.Vector3(x, y0, z))
-        geom.vertices.push(new THREE.Vector3(x + h, y0, z))
-        geom.vertices.push(new THREE.Vector3(x + h, y0, z + h))
-
-        geom.vertices.push(new THREE.Vector3(x, y0, z))
-        geom.vertices.push(new THREE.Vector3(x, y0, z + h))
-        geom.vertices.push(new THREE.Vector3(x + h, y0, z + h))
-
-        geom.faces.push(new THREE.Face3(0, 1, 2))
-        geom.faces.push(new THREE.Face3(3, 4, 5))
-        geom.computeFaceNormals()
-
-        vertices.push(new THREE.Mesh(geom, material))
-      }
-    }
-
-    return vertices
+    const w = Math.abs(Math.max(diagonal.x1, diagonal.x2) - Math.min(diagonal.x1, diagonal.x2))
+    const l = Math.abs(Math.max(diagonal.y1, diagonal.y2) - Math.min(diagonal.y1, diagonal.y2))
+    const geom = new THREE.PlaneGeometry(w, l, 30, 30)
+    geom.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / 2))
+    const plane = new THREE.Mesh(geom, material)
+    plane.translateOnAxis(new THREE.Vector3(w / 2, y, l / 2), 1)
+    plane.receiveShadow = true
+    return plane
   }
 
   public generateWalls(): THREE.Mesh[] {
@@ -49,6 +35,8 @@ export abstract class AbstractWallGenerator {
     this.lines.forEach(line => {
       this.generateWall(line).forEach(wall => {
         if (wall) {
+          wall.castShadow = true
+          wall.receiveShadow = true
           walls.push(wall)
         }
       })

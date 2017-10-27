@@ -10,11 +10,14 @@ export abstract class BasicGame {
   public config: GameConfig
   public camera: THREE.Camera
   public scene = new THREE.Scene()
-  public renderer = new THREE.WebGLRenderer()
+  public renderer = new THREE.WebGLRenderer({ antialias: true })
   public canvas: HTMLCanvasElement
 
   constructor(config: GameConfig) {
     this.config = config
+    // this.renderer.shadowMap.enabled = true
+    this.renderer.shadowMap.renderSingleSided = false
+    this.renderer.shadowMap.autoUpdate = true
     this.renderer.setSize(this.config.width, this.config.height)
     this.canvas = this.renderer.domElement
     document.body.appendChild(this.canvas)
@@ -24,6 +27,7 @@ export abstract class BasicGame {
 
   private _render() {
     this.render()
+    this.renderer.shadowMap.render(this.scene, this.camera)
     this.renderer.render(this.scene, this.camera)
     requestAnimationFrame(() => this.animate(new Date().getTime()))
   }

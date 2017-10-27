@@ -1,3 +1,7 @@
+declare module '*.svg' {
+  var value: any
+  export = value
+}
 
 declare interface Line {
   x1: number
