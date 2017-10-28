@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import { intersect } from './lineIntersector'
 
 interface Directions {
   up: number
@@ -25,6 +24,14 @@ export class MovementManager {
   constructor(camera: THREE.Camera, scene: THREE.Scene) {
     this.camera = camera
     this.scene = scene
+
+    const cameraGeo = new THREE.SphereGeometry(1.5)
+    cameraGeo.computeBoundingSphere()
+    const cameraSphere = new THREE.Mesh(
+      cameraGeo,
+      new THREE.MeshLambertMaterial({ color: 0xff0000, side: THREE.DoubleSide })
+    )
+    this.camera.add(cameraSphere)
     document.addEventListener('keydown', (e) => this.handleKeyPress(e, 1))
     document.addEventListener('keyup', (e) => this.handleKeyPress(e, 0))
   }
@@ -55,49 +62,30 @@ export class MovementManager {
     }
   }
 
-  private checkWallsIntersection(walls: Line[] = [], movementSegment: Line) {
-    return walls.some((wall) => {
-      return !!intersect(
-        wall.x1,
-        wall.y1,
-        wall.x2,
-        wall.y2,
-        movementSegment.x1,
-        movementSegment.y1,
-        movementSegment.x2,
-        movementSegment.y2
-      )
-    })
-  }
-
-  public render(walls: Line[] = [], off: number) {
+  public render(walls: THREE.Mesh[], wallLines: Line[] = [], off: number) {
     const prevPos = this.camera.position.clone()
-    const prevRot = this.camera.rotation.clone()
     this.camera.translateZ(this.movement.down - this.movement.up)
     this.camera.translateX(this.movement.right - this.movement.left)
     this.camera.rotateY(this.movement.rotateLeft - this.movement.rotateRight)
     const nextPos = this.camera.position.clone()
-    const nextRot = this.camera.rotation.clone()
-    this.camera.translateZ(off * (this.movement.down - this.movement.up))
-    this.camera.translateX(off * (this.movement.right - this.movement.left))
-    this.camera.rotateY(off * this.movement.rotateLeft - this.movement.rotateRight)
-    const lookahead = this.camera.position.clone()
 
-    if (this.checkWallsIntersection(
-      walls,
-      {
-        x1: prevPos.x,
-        y1: prevPos.z,
-        x2: lookahead.x,
-        y2: lookahead.z
-      }
-    )) {
+    const cameraBounds = new THREE.Sphere(
+      nextPos,
+      (this.camera.children[0] as THREE.Mesh).geometry.boundingSphere.radius
+    )
+
+    const intersects = walls.some((wall) => {
+      const boundingBox = wall.geometry.boundingBox.clone()
+      boundingBox.max.add(wall.position)
+      boundingBox.min.add(wall.position)
+      return (
+        cameraBounds.intersectsBox(boundingBox)
+      )
+    })
+    if (intersects) {
       this.camera.position.copy(prevPos)
-      this.camera.rotation.copy(prevRot)
-
     } else {
       this.camera.position.copy(nextPos)
-      this.camera.rotation.copy(nextRot)
     }
   }
 }

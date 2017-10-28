@@ -35,6 +35,7 @@ export abstract class AbstractWallGenerator {
     this.lines.forEach(line => {
       this.generateWall(line).forEach(wall => {
         if (wall) {
+          wall.geometry.computeBoundingBox()
           wall.castShadow = true
           wall.receiveShadow = true
           walls.push(wall)
