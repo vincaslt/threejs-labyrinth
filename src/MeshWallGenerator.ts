@@ -9,7 +9,7 @@ export class MeshWallGenerator extends AbstractWallGenerator {
     const geom = new THREE.PlaneGeometry(Math.max(w, l), this.wallHeight, 10, 10)
     const wall = new THREE.Mesh(geom, material)
     if (l > w) {
-      wall.rotateY(Math.PI / 2)
+      wall.rotateY(3 * Math.PI / 2)
     }
     wall.position.x = line.x1 + w / 2
     wall.position.y = 0 + this.wallHeight / 2

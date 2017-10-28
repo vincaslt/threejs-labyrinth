@@ -25,7 +25,7 @@ export class MovementManager {
     this.camera = camera
     this.scene = scene
 
-    const cameraGeo = new THREE.SphereGeometry(1.5)
+    const cameraGeo = new THREE.SphereGeometry(1.275)
     cameraGeo.computeBoundingSphere()
     const cameraSphere = new THREE.Mesh(
       cameraGeo,
@@ -74,14 +74,14 @@ export class MovementManager {
       (this.camera.children[0] as THREE.Mesh).geometry.boundingSphere.radius
     )
 
-    const intersects = walls.some((wall) => {
+    const intersects = walls.some((wall, i) => {
       const boundingBox = wall.geometry.boundingBox.clone()
-      boundingBox.max.add(wall.position)
-      boundingBox.min.add(wall.position)
-      return (
-        cameraBounds.intersectsBox(boundingBox)
-      )
+      const wallPos = wall.position.clone()
+      boundingBox.max.applyEuler(wall.rotation).add(wallPos)
+      boundingBox.min.applyEuler(wall.rotation).add(wallPos)
+      return boundingBox.intersectsSphere(cameraBounds)
     })
+
     if (intersects) {
       this.camera.position.copy(prevPos)
     } else {

@@ -4,8 +4,8 @@ import { BasicGame } from './BasicGame'
 import { MovementManager } from './MovementManager'
 import { LightGenerator } from './LightGenerator'
 import { ExplodingCube } from './ExplodingCube'
-import { BoxWallGenerator } from './BoxWallGenerator'
-// import { MeshWallGenerator } from './MeshWallGenerator'
+// import { BoxWallGenerator } from './BoxWallGenerator'
+import { MeshWallGenerator } from './MeshWallGenerator'
 
 export class MainGame extends BasicGame {
   movement: MovementManager
@@ -32,7 +32,7 @@ export class MainGame extends BasicGame {
     ddchd.position.y = 7
     ddchd.position.z = 315
 
-    const wallGenerator = new BoxWallGenerator(mazeLines, 15)
+    const wallGenerator = new MeshWallGenerator(mazeLines, 15)
     const ambientLight = new THREE.AmbientLight(0x0c0c0c, 20)
 
     const floor = wallGenerator.generateFloor(getFloorDiagonal(mazeLines))

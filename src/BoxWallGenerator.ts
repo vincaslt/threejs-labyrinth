@@ -28,7 +28,7 @@ export class BoxWallGenerator extends AbstractWallGenerator {
         THICK,
         this.wallHeight,
         THICK,
-        5, 5, 5
+        10, 10, 10
       )
       const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
       const filler = new THREE.Mesh(geom, material)
