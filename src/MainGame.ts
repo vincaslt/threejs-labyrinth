@@ -11,10 +11,9 @@ export class MainGame extends BasicGame {
   movement: MovementManager
   walls: THREE.Mesh[]
   ddchd: ExplodingCube
-  wallLines: Line[]
 
   init() {
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
     this.camera.position.x = 170
     this.camera.position.y = 7
     this.camera.position.z = 320
@@ -24,13 +23,12 @@ export class MainGame extends BasicGame {
 
   buildScene() {
     const mazeLines = getMaze(2, 1)
-    this.wallLines = mazeLines
 
     this.ddchd = new ExplodingCube()
     const ddchdObj = this.ddchd.getObject()
-    ddchdObj.position.x = 170
+    ddchdObj.position.x = 152
     ddchdObj.position.y = 7
-    ddchdObj.position.z = 315
+    ddchdObj.position.z = 245
 
     const wallGenerator = new MeshWallGenerator(mazeLines, 15)
     const ambientLight = new THREE.AmbientLight(0x0c0c0c, 20)
@@ -44,12 +42,12 @@ export class MainGame extends BasicGame {
   }
 
   render() {
-    this.movement.render(this.walls, this.wallLines, 5)
+    this.movement.render(this.walls)
     const ddchdObj = this.ddchd.getObject()
-    if (this.camera.position.distanceTo(ddchdObj.position) < 5) {
+    if (this.camera.position.distanceTo(ddchdObj.position) < 10) {
       this.ddchd.explode(this.scene)
     }
-    this.ddchd.render()
+    this.ddchd.render(this.scene)
   }
 
   update() {}

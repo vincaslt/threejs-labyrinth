@@ -62,7 +62,7 @@ export class MovementManager {
     }
   }
 
-  public render(walls: THREE.Mesh[], wallLines: Line[] = [], off: number) {
+  public render(walls: THREE.Mesh[]) {
     const prevPos = this.camera.position.clone()
     this.camera.translateZ(this.movement.down - this.movement.up)
     this.camera.translateX(this.movement.right - this.movement.left)

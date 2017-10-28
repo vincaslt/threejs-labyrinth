@@ -23,6 +23,7 @@ export abstract class AbstractWallGenerator {
     const w = Math.abs(Math.max(diagonal.x1, diagonal.x2) - Math.min(diagonal.x1, diagonal.x2))
     const l = Math.abs(Math.max(diagonal.y1, diagonal.y2) - Math.min(diagonal.y1, diagonal.y2))
     const geom = new THREE.PlaneGeometry(w, l, 30, 30)
+    geom.computeBoundingBox()
     geom.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI / 2))
     const plane = new THREE.Mesh(geom, material)
     plane.translateOnAxis(new THREE.Vector3(w / 2, y, l / 2), 1)

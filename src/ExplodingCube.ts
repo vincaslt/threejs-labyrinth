@@ -13,7 +13,6 @@ export class ExplodingCube {
   }
 
   private generateTriangles(scene: THREE.Scene) {
-    const pos = this.object.position.clone()
     const faces = (this.object.geometry as THREE.Geometry).faces.slice()
     this.triangles = faces.map((face) => {
       const geom = new THREE.Geometry()
@@ -22,9 +21,14 @@ export class ExplodingCube {
         face.vertexNormals[1],
         face.vertexNormals[2]
       )
-      geom.faces.push(new THREE.Face3(0, 1, 2))
-      var mesh = new THREE.Mesh(geom, new THREE.MeshLambertMaterial({ color: 0xff0000 }))
-      mesh.position.copy(pos)
+      const f = new THREE.Face3(0, 1, 2)
+      f.normal = face.normal.clone()
+      geom.faces.push(f)
+      geom.computeBoundingBox()
+      var mesh = new THREE.Mesh(geom, new THREE.MeshLambertMaterial({
+        color: (Math.random() * 255) * (Math.random() * 255) * (Math.random() * 255)
+      }))
+      mesh.position.copy(this.object.position)
       return mesh
     })
     scene.add(...this.triangles)
@@ -38,8 +42,15 @@ export class ExplodingCube {
     }
   }
 
-  public render() {
+  public render(scene: THREE.Scene) {
     if (this.exploded) {
+      this.triangles.forEach((triangle) => {
+        triangle.translateOnAxis((triangle.geometry as THREE.Geometry).faces[0].normal, 0.1)
+        const outOfRange = this.object.position.distanceTo(triangle.position) > 10
+        if (outOfRange) {
+          scene.remove(triangle)
+        }
+      })
     }
   }
 
