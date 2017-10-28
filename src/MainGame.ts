@@ -1,16 +1,24 @@
 import * as THREE from 'three'
 import { getMaze, getFloorDiagonal } from './mazeParser/mazeParser'
-import { BasicGame } from './BasicGame'
+import { BasicGame, GameConfig } from './BasicGame'
 import { MovementManager } from './MovementManager'
 import { LightGenerator } from './LightGenerator'
 import { ExplodingCube } from './ExplodingCube'
-// import { BoxWallGenerator } from './BoxWallGenerator'
-import { MeshWallGenerator } from './MeshWallGenerator'
+import { AbstractWallGenerator } from './AbstractWallGenerator'
 
 export class MainGame extends BasicGame {
+  wallGenerator: AbstractWallGenerator
   movement: MovementManager
   walls: THREE.Mesh[]
   ddchd: ExplodingCube
+
+  constructor(config: GameConfig, wallGenerator: AbstractWallGenerator) {
+    super(config)
+    this.wallGenerator = wallGenerator
+
+    this.init()
+    this._render()
+  }
 
   init() {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
@@ -26,16 +34,15 @@ export class MainGame extends BasicGame {
 
     this.ddchd = new ExplodingCube()
     const ddchdObj = this.ddchd.getObject()
-    ddchdObj.position.x = 152
+    ddchdObj.position.x = 175
     ddchdObj.position.y = 7
-    ddchdObj.position.z = 245
+    ddchdObj.position.z = 6
 
-    const wallGenerator = new MeshWallGenerator(mazeLines, 15)
     const ambientLight = new THREE.AmbientLight(0x0c0c0c, 20)
 
-    const floor = wallGenerator.generateFloor(getFloorDiagonal(mazeLines))
-    const ceiling = wallGenerator.generateCeiling(getFloorDiagonal(mazeLines))
-    this.walls = wallGenerator.generateWalls()
+    const floor = this.wallGenerator.generateFloor(getFloorDiagonal(mazeLines))
+    const ceiling = this.wallGenerator.generateCeiling(getFloorDiagonal(mazeLines))
+    this.walls = this.wallGenerator.generateWalls(mazeLines)
     const lights = LightGenerator.generateLights()
 
     this.scene.add(...this.walls, ceiling, floor, ambientLight, ...lights, ddchdObj)

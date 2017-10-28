@@ -26,7 +26,8 @@ export class ExplodingCube {
       geom.faces.push(f)
       geom.computeBoundingBox()
       var mesh = new THREE.Mesh(geom, new THREE.MeshLambertMaterial({
-        color: (Math.random() * 255) * (Math.random() * 255) * (Math.random() * 255)
+        color: (Math.random() * 255) * (Math.random() * 255) * (Math.random() * 255),
+        transparent: true
       }))
       mesh.position.copy(this.object.position)
       return mesh
@@ -46,7 +47,10 @@ export class ExplodingCube {
     if (this.exploded) {
       this.triangles.forEach((triangle) => {
         triangle.translateOnAxis((triangle.geometry as THREE.Geometry).faces[0].normal, 0.1)
-        const outOfRange = this.object.position.distanceTo(triangle.position) > 10
+        const m = (triangle.material as THREE.Material)
+        const dist = this.object.position.distanceTo(triangle.position)
+        m.opacity = 1 - dist / 10
+        const outOfRange = dist > 10
         if (outOfRange) {
           scene.remove(triangle)
         }

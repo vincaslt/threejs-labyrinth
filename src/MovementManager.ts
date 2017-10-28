@@ -51,13 +51,10 @@ export class MovementManager {
         this.movement.right = speed
         break
       case 'a':
-        this.movement.rotateLeft = speed * 0.05
+        this.movement.rotateLeft = speed * 0.075
         break
       case 'd':
-        this.movement.rotateRight = speed * 0.05
-        break
-      case 'Enter':
-        console.log(this.camera.position.toArray())
+        this.movement.rotateRight = speed * 0.075
         break
     }
   }

@@ -6,7 +6,7 @@ const THICK = 2
 export class BoxWallGenerator extends AbstractWallGenerator {
   fillerPositions: { x: number, z: number }[] = []
 
-  generateFiller(line: Line, onStart = false) {
+  generateFiller(line: Line, lines: Line[], onStart = false) {
     const cpr = onStart ? Math.min : Math.max
     const x = cpr(line.x1, line.x2) + THICK / 2
     const z = cpr(line.y1, line.y2) + THICK / 2
@@ -14,7 +14,7 @@ export class BoxWallGenerator extends AbstractWallGenerator {
       return filler.x === x && filler.z === z
     })
 
-    const fillerIntersects = this.lines.some(line => {
+    const fillerIntersects = lines.some(line => {
       const wallEndX = Math.max(line.x1, line.x2)
       const wallStartX = Math.min(line.x1, line.x2)
       const wallEndZ = Math.max(line.y1, line.y2)
@@ -42,7 +42,7 @@ export class BoxWallGenerator extends AbstractWallGenerator {
     return undefined
   }
 
-  generateWall(line: Line) {
+  generateWall(line: Line, lines: Line[]) {
     let w = Math.abs(line.x2 - line.x1) + THICK
     let l = Math.abs(line.y2 - line.y1) + THICK
     let x = Math.min(line.x1, line.x2) + w / 2
@@ -58,6 +58,6 @@ export class BoxWallGenerator extends AbstractWallGenerator {
     wall.position.y = 0 + this.wallHeight / 2
     wall.position.z = z
 
-    return [wall, this.generateFiller(line, true), this.generateFiller(line)]
+    return [wall, this.generateFiller(line, lines, true), this.generateFiller(line, lines)]
   }
 }

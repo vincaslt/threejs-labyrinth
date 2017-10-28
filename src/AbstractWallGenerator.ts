@@ -1,14 +1,13 @@
 import * as THREE from 'three'
 
 export abstract class AbstractWallGenerator {
-  lines: Line[]
   wallHeight: number
 
-  constructor(mazeLines: Line[], wallHeight: number) {
-    this.lines = mazeLines
+  constructor(wallHeight: number) {
     this.wallHeight = wallHeight
   }
-  public abstract generateWall(line: Line): THREE.Mesh[]
+
+  public abstract generateWall(line: Line, lines: Line[]): THREE.Mesh[]
 
   generateCeiling(diagonal: Line) {
     return this.generatePlane(diagonal, this.wallHeight, 0x7f1ae5)
@@ -31,10 +30,10 @@ export abstract class AbstractWallGenerator {
     return plane
   }
 
-  public generateWalls(): THREE.Mesh[] {
+  public generateWalls(mazeLines: Line[]): THREE.Mesh[] {
     const walls: THREE.Mesh[] = []
-    this.lines.forEach(line => {
-      this.generateWall(line).forEach(wall => {
+    mazeLines.forEach(line => {
+      this.generateWall(line, mazeLines).forEach(wall => {
         if (wall) {
           wall.geometry.computeBoundingBox()
           wall.castShadow = true

@@ -20,12 +20,15 @@ export abstract class BasicGame {
     this.renderer.shadowMap.autoUpdate = true
     this.renderer.setSize(this.config.width, this.config.height)
     this.canvas = this.renderer.domElement
-    document.body.appendChild(this.canvas)
-    this.init()
-    this._render()
+
+    const el = document.querySelector('#game')
+    if (el.firstChild) {
+      el.removeChild(el.firstChild)
+    }
+    el.appendChild(this.canvas)
   }
 
-  private _render() {
+  protected _render() {
     this.render()
     this.renderer.shadowMap.render(this.scene, this.camera)
     this.renderer.render(this.scene, this.camera)
