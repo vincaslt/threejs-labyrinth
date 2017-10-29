@@ -34,9 +34,9 @@ export class MainGame extends BasicGame {
 
     this.ddchd = new ExplodingCube()
     const ddchdObj = this.ddchd.getObject()
-    ddchdObj.position.x = 175
-    ddchdObj.position.y = 7
-    ddchdObj.position.z = 6
+    ddchdObj.position.x = 170
+    ddchdObj.position.y = 7.5
+    ddchdObj.position.z = 7.5
 
     const ambientLight = new THREE.AmbientLight(0x0c0c0c, 20)
 

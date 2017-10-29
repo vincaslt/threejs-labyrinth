@@ -6,7 +6,7 @@ export class ExplodingCube {
   triangles: THREE.Mesh[]
 
   constructor(color: number = 0xffee00) {
-    const material = new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide })
+    const material = new THREE.MeshLambertMaterial({ color })
     const geom = new THREE.DodecahedronGeometry(1, 2)
     geom.computeBoundingBox()
     this.object = new THREE.Mesh(geom, material)
@@ -27,6 +27,7 @@ export class ExplodingCube {
       geom.computeBoundingBox()
       var mesh = new THREE.Mesh(geom, new THREE.MeshLambertMaterial({
         color: (Math.random() * 255) * (Math.random() * 255) * (Math.random() * 255),
+        side: THREE.DoubleSide,
         transparent: true
       }))
       mesh.position.copy(this.object.position)
@@ -46,11 +47,11 @@ export class ExplodingCube {
   public render(scene: THREE.Scene) {
     if (this.exploded) {
       this.triangles.forEach((triangle) => {
-        triangle.translateOnAxis((triangle.geometry as THREE.Geometry).faces[0].normal, 0.1)
+        triangle.translateOnAxis((triangle.geometry as THREE.Geometry).faces[0].normal, 0.15)
         const m = (triangle.material as THREE.Material)
         const dist = this.object.position.distanceTo(triangle.position)
-        m.opacity = 1 - dist / 10
-        const outOfRange = dist > 10
+        m.opacity = 1 - dist / 7.5
+        const outOfRange = dist > 7.5
         if (outOfRange) {
           scene.remove(triangle)
         }
