@@ -30,7 +30,7 @@ export class BoxWallGenerator extends AbstractWallGenerator {
         THICK,
         10, 10, 10
       )
-      const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
+      const material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa })
       const filler = new THREE.Mesh(geom, material)
       filler.position.x = x
       filler.position.z = z
@@ -52,7 +52,7 @@ export class BoxWallGenerator extends AbstractWallGenerator {
       this.wallHeight,
       Math.max(l - THICK * 2, THICK)
     )
-    const material = new THREE.MeshLambertMaterial({ color: 0xaaaaaa })
+    const material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa })
     const wall = new THREE.Mesh(geom, material)
     wall.position.x = x
     wall.position.y = 0 + this.wallHeight / 2

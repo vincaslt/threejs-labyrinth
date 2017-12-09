@@ -16,3 +16,9 @@ declare module 'three-trackballcontrols' {
   class TrackballControls extends THREE.TrackballControls {}
   export = TrackballControls
 }
+
+declare interface Point {
+  x: number,
+  y: number,
+  z: number
+}

@@ -6,7 +6,7 @@ export interface GameConfig {
   height: number
 }
 
-export abstract class BasicGame {
+export abstract class AbstractGame {
   public config: GameConfig
   public camera: THREE.Camera
   public scene = new THREE.Scene()
@@ -15,7 +15,7 @@ export abstract class BasicGame {
 
   constructor(config: GameConfig) {
     this.config = config
-    // this.renderer.shadowMap.enabled = true
+    this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.renderSingleSided = false
     this.renderer.shadowMap.autoUpdate = true
     this.renderer.setSize(this.config.width, this.config.height)

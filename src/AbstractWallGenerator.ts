@@ -9,16 +9,12 @@ export abstract class AbstractWallGenerator {
 
   public abstract generateWall(line: Line, lines: Line[]): THREE.Mesh[]
 
-  generateCeiling(diagonal: Line) {
-    return this.generatePlane(diagonal, this.wallHeight, 0x7f1ae5)
-  }
-
   generateFloor(diagonal: Line) {
     return this.generatePlane(diagonal)
   }
 
   generatePlane(diagonal: Line, y = 0, color: number = 0x888888) {
-    const material = new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide })
+    const material = new THREE.MeshPhongMaterial({ color, side: THREE.DoubleSide })
     const w = Math.abs(Math.max(diagonal.x1, diagonal.x2) - Math.min(diagonal.x1, diagonal.x2))
     const l = Math.abs(Math.max(diagonal.y1, diagonal.y2) - Math.min(diagonal.y1, diagonal.y2))
     const geom = new THREE.PlaneGeometry(w, l, 30, 30)

@@ -5,7 +5,8 @@ export interface Light {
 }
 
 export const lightPoints: Light[] = [
-  { x: 168, y: 295, color: 0x00ff00 },
+  { x: 170, y: 295, color: 0x0000ff },
+  { x: 170, y: 320, color: 0x00ff00 },
   { x: 133, y: 280, color: 0xff0000 },
   { x: 85, y: 215, color: 0x0000ff },
   { x: 155, y: 215, color: 0xffff00 },
