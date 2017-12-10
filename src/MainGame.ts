@@ -8,6 +8,7 @@ import { RollingBall } from './RollingBall'
 import { FreeViewCamera } from './cameras/FreeViewCamera'
 import { AbstractCamera } from './cameras/AbstractCamera'
 import { DirectedCamera } from './cameras/DirectedCamera'
+import { FollowCamera } from './cameras/FollowCamera'
 import { GUI } from './GUI'
 
 export class MainGame extends AbstractGame {
@@ -17,6 +18,7 @@ export class MainGame extends AbstractGame {
   ball: RollingBall
   cameras: AbstractCamera[] = []
   activeCamera: number = 0
+  private followCamera: FollowCamera
 
   constructor(config: GameConfig) {
     super(config)
@@ -33,6 +35,8 @@ export class MainGame extends AbstractGame {
   init() {
     this.cameras.push(new FreeViewCamera())
     this.cameras.push(new DirectedCamera())
+    this.followCamera = new FollowCamera()
+    this.cameras.push(this.followCamera)
 
     GUI.add(this, 'activeCamera').min(0).step(1).max(this.cameras.length - 1)
 
@@ -55,7 +59,7 @@ export class MainGame extends AbstractGame {
     this.rock.receiveShadow = true
     this.rock.scale.set(3, 3, 3)
 
-    const light = new THREE.PointLight(0xff00ff, 2, 280)
+    const light = new THREE.PointLight(0xff00ff, 2, 250)
     light.position.set(170, 70, 230)
     light.castShadow = true
     light.shadow.bias = -0.001
@@ -63,6 +67,7 @@ export class MainGame extends AbstractGame {
     this.ball = new RollingBall(this.scene)
 
     this.cameras.forEach(camera => camera.setTarget(this.ball.ball))
+    this.followCamera.addDirectionVector(this.ball.direction)
 
     this.scene.add(...this.walls, floor, this.rock, ambientLight, light)
   }
@@ -73,7 +78,7 @@ export class MainGame extends AbstractGame {
   }
 
   update() {
-    this.refreshActiveCamera()
     this.camera.update(this.scene)
+    this.refreshActiveCamera()
   }
 }

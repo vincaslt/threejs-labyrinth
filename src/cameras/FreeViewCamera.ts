@@ -10,7 +10,7 @@ export class FreeViewCamera extends AbstractCamera {
 
     this.threeJsCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
     this.threeJsCamera.position.x = 170
-    this.threeJsCamera.position.y = 30
+    this.threeJsCamera.position.y = 50
     this.threeJsCamera.position.z = 340
     this.threeJsCamera.rotateX(-60 * Math.PI / 180)
 
