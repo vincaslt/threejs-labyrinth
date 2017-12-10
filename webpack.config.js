@@ -40,15 +40,6 @@ module.exports = {
                 exclude: /node_modules/,
                 use: 'tslint-loader'
             },
-            {
-                enforce: 'pre',
-                test: /\.jpg$/,
-                exclude: /node_modules/,
-                use: [
-                    'url-loader?limit=10000',
-                    'img-loader'
-                ]
-            },
 
             /****************
             * LOADERS
@@ -57,6 +48,37 @@ module.exports = {
                 test: /\.ts$/,
                 exclude: [ /node_modules/ ],
                 use: 'awesome-typescript-loader'
+            },
+            {
+                test: /\.jpg$/,
+                exclude: /node_modules/,
+                use: [
+                    'url-loader?limit=10000',
+                    'img-loader'
+                ]
+            },
+            {
+                test: /\.(html)$/,
+                use: {
+                    loader: 'html-loader',
+                    options: {
+                        attrs: [':data-src']
+                    }
+                }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.scss$/,
+                use: [{
+                    loader: "style-loader"
+                }, {
+                    loader: "css-loader"
+                }, {
+                    loader: "sass-loader"
+                }]
             }
         ]
     },

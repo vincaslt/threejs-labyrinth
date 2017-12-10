@@ -1,3 +1,9 @@
+declare module 'dat.gui' {
+  import * as dat from 'dat-gui'
+  export default dat
+  
+}
+
 declare module '*.svg' {
   var value: any
   export = value

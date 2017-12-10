@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { AbstractCamera } from './cameras/AbstractCamera'
 
 export interface GameConfig {
   fps: number
@@ -9,7 +10,7 @@ export interface GameConfig {
 
 export abstract class AbstractGame {
   public config: GameConfig
-  public camera: THREE.Camera
+  public camera: AbstractCamera
   public scene = new THREE.Scene()
   public renderer: THREE.WebGLRenderer
   public canvas: HTMLCanvasElement
@@ -32,8 +33,8 @@ export abstract class AbstractGame {
 
   protected _render() {
     this.render()
-    this.renderer.shadowMap.render(this.scene, this.camera)
-    this.renderer.render(this.scene, this.camera)
+    this.renderer.shadowMap.render(this.scene, this.camera.getCamera())
+    this.renderer.render(this.scene, this.camera.getCamera())
     requestAnimationFrame(() => this.animate(new Date().getTime()))
   }
 

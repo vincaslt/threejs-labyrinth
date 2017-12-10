@@ -1,18 +1,22 @@
 import * as THREE from 'three'
-import { OrbitControls } from './vendors/OrbitControls'
 import { getMaze, getFloorDiagonal } from './mazeParser/mazeParser'
 import { AbstractGame, GameConfig } from './AbstractGame'
 import { AbstractWallGenerator } from './AbstractWallGenerator'
 import { BoxWallGenerator } from './BoxWallGenerator'
 import { RockGenerator } from './RockGenerator'
 import { RollingBall } from './RollingBall'
+import { FreeViewCamera } from './cameras/FreeViewCamera'
+import { AbstractCamera } from './cameras/AbstractCamera'
+import { DirectedCamera } from './cameras/DirectedCamera'
+import { GUI } from './GUI'
 
 export class MainGame extends AbstractGame {
   wallGenerator: AbstractWallGenerator
   walls: THREE.Mesh[]
-  controls: any
   rock: THREE.Object3D
   ball: RollingBall
+  cameras: AbstractCamera[] = []
+  activeCamera: number = 0
 
   constructor(config: GameConfig) {
     super(config)
@@ -22,18 +26,17 @@ export class MainGame extends AbstractGame {
     this._render()
   }
 
-  init() {
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000)
-    this.camera.position.x = 170
-    this.camera.position.y = 30
-    this.camera.position.z = 340
-    this.camera.rotateX(-60 * Math.PI / 180)
+  private refreshActiveCamera() {
+    this.camera = this.cameras[this.activeCamera]
+  }
 
-    this.controls = new OrbitControls(this.camera, undefined)
-    this.controls.rotateSpeed = 0.02
-    this.controls.zoomSpeed = 0.2
-    this.controls.keyPanSpeed = 0.02
-    this.controls.enableDamping = true
+  init() {
+    this.cameras.push(new FreeViewCamera())
+    this.cameras.push(new DirectedCamera())
+
+    GUI.add(this, 'activeCamera').min(0).step(1).max(this.cameras.length - 1)
+
+    this.refreshActiveCamera()
     this.buildScene()
   }
 
@@ -59,6 +62,8 @@ export class MainGame extends AbstractGame {
 
     this.ball = new RollingBall(this.scene)
 
+    this.cameras.forEach(camera => camera.setTarget(this.ball.ball))
+
     this.scene.add(...this.walls, floor, this.rock, ambientLight, light)
   }
 
@@ -68,6 +73,7 @@ export class MainGame extends AbstractGame {
   }
 
   update() {
-    this.controls.update()
+    this.refreshActiveCamera()
+    this.camera.update(this.scene)
   }
 }
