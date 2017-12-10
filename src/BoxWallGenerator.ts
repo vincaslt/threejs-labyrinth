@@ -1,7 +1,25 @@
 import * as THREE from 'three'
 import { AbstractWallGenerator } from './AbstractWallGenerator'
+import * as image1 from './walls/brick-wall.jpg'
+import * as image2 from './walls/floor-wood.jpg'
+import * as image3 from './walls/metal-floor.jpg'
+import * as image4 from './walls/stone-bump.jpg'
+import * as image5 from './walls/stone.jpg'
 
 const THICK = 2
+
+const loader = new THREE.TextureLoader()
+const texture1 = loader.load(image1)
+const texture2 = loader.load(image2)
+const texture3 = loader.load(image3)
+const texture4 = loader.load(image4)
+const texture5 = loader.load(image5)
+
+const material1 = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, map: texture1, overdraw: 5, side: THREE.DoubleSide })
+const material2 = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, map: texture2, overdraw: 5, side: THREE.DoubleSide })
+const material3 = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, map: texture3, overdraw: 5, side: THREE.DoubleSide })
+const material4 = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, map: texture4, overdraw: 5, side: THREE.DoubleSide })
+const material5 = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, map: texture5, overdraw: 5, side: THREE.DoubleSide })
 
 export class BoxWallGenerator extends AbstractWallGenerator {
   fillerPositions: { x: number, z: number }[] = []
@@ -30,8 +48,8 @@ export class BoxWallGenerator extends AbstractWallGenerator {
         THICK,
         10, 10, 10
       )
-      const material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa })
-      const filler = new THREE.Mesh(geom, material)
+
+      const filler = new THREE.Mesh(geom, [material1, material2, material3, material4, material5, material4])
       filler.position.x = x
       filler.position.z = z
       filler.position.y = 0 + this.wallHeight / 2
@@ -52,8 +70,8 @@ export class BoxWallGenerator extends AbstractWallGenerator {
       this.wallHeight,
       Math.max(l - THICK * 2, THICK)
     )
-    const material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa })
-    const wall = new THREE.Mesh(geom, material)
+
+    const wall = new THREE.Mesh(geom, [material1, material2, material3, material4, material5, material4])
     wall.position.x = x
     wall.position.y = 0 + this.wallHeight / 2
     wall.position.z = z

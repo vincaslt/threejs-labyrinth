@@ -4,17 +4,19 @@ export interface GameConfig {
   fps: number
   width: number
   height: number
+  antialias: boolean
 }
 
 export abstract class AbstractGame {
   public config: GameConfig
   public camera: THREE.Camera
   public scene = new THREE.Scene()
-  public renderer = new THREE.WebGLRenderer({ antialias: true })
+  public renderer: THREE.WebGLRenderer
   public canvas: HTMLCanvasElement
 
   constructor(config: GameConfig) {
     this.config = config
+    this.renderer = new THREE.WebGLRenderer({ antialias: config.antialias })
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.renderSingleSided = false
     this.renderer.shadowMap.autoUpdate = true

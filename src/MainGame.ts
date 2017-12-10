@@ -2,16 +2,17 @@ import * as THREE from 'three'
 import { OrbitControls } from './vendors/OrbitControls'
 import { getMaze, getFloorDiagonal } from './mazeParser/mazeParser'
 import { AbstractGame, GameConfig } from './AbstractGame'
-import { LightGenerator } from './LightGenerator'
 import { AbstractWallGenerator } from './AbstractWallGenerator'
 import { BoxWallGenerator } from './BoxWallGenerator'
 import { RockGenerator } from './RockGenerator'
+import { RollingBall } from './RollingBall'
 
 export class MainGame extends AbstractGame {
   wallGenerator: AbstractWallGenerator
   walls: THREE.Mesh[]
   controls: any
   rock: THREE.Object3D
+  ball: RollingBall
 
   constructor(config: GameConfig) {
     super(config)
@@ -42,21 +43,28 @@ export class MainGame extends AbstractGame {
 
     const floor = this.wallGenerator.generateFloor(getFloorDiagonal(mazeLines))
     this.walls = this.wallGenerator.generateWalls(mazeLines)
-    const lights = LightGenerator.generateLights()
 
     this.rock = RockGenerator.generateRock()
     this.rock.position.x = 170
     this.rock.position.y = 7
-    this.rock.position.z = 305
+    this.rock.position.z = 315
     this.rock.castShadow = true
     this.rock.receiveShadow = true
     this.rock.scale.set(3, 3, 3)
 
-    this.scene.add(...this.walls, floor, this.rock, ambientLight, ...lights)
+    const light = new THREE.PointLight(0xff00ff, 2, 280)
+    light.position.set(170, 70, 230)
+    light.castShadow = true
+    light.shadow.bias = -0.001
+
+    this.ball = new RollingBall(this.scene)
+
+    this.scene.add(...this.walls, floor, this.rock, ambientLight, light)
   }
 
   render() {
     this.rock.rotateY(3 * Math.PI / 180)
+    this.ball.move()
   }
 
   update() {

@@ -5,7 +5,7 @@ import * as image from './checkerboard.o.jpg'
 const H = 1
 const R = 1
 
-function rng(min, max) {
+function rng(min, max): number {
   return Math.random() * (max - min) + min
 }
 
@@ -33,12 +33,15 @@ export class RockGenerator {
         v
       )
     }
+
     const fixUVs = (a: THREE.Vector2, b: THREE.Vector2) => {
       if (a.distanceTo(b) >= 1) {
         if (a.x >= b.x) {
           a.x -= 1
+          console.log('in a', a.distanceTo(b))
         } else {
           b.x -= 1
+          console.log('in b', a.distanceTo(b))
         }
       }
     }
@@ -63,18 +66,11 @@ export class RockGenerator {
     geometry.computeVertexNormals()
     geometry.faceVertexUvs[0] = RockGenerator.generateFaceVertexUvs(geometry)
     geometry.uvsNeedUpdate = true
-    const texture = THREE.ImageUtils.loadTexture(image)
+
+    const texture = new THREE.TextureLoader().load(image)
     const material = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.DoubleSide })
     material.map = texture
     const mesh = new THREE.Mesh(geometry, material)
-
-    const dotGeometry = new THREE.Geometry()
-    dotGeometry.vertices = geometry.vertices
-    const dotMaterial = new THREE.PointsMaterial({ size: 3, sizeAttenuation: false, color: 0xff0000 })
-    const dot = new THREE.Points(dotGeometry, dotMaterial)
-    mesh.add(dot)
-
-
     return mesh
   }
 }
