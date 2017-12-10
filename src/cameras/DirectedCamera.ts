@@ -10,7 +10,6 @@ export class DirectedCamera extends AbstractCamera {
     this.threeJsCamera.position.x = 160
     this.threeJsCamera.position.y = 100
     this.threeJsCamera.position.z = 160
-    this.threeJsCamera.rotateX(-90 * Math.PI / 180)
   }
 
   update(scene) {

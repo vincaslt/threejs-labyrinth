@@ -10,6 +10,7 @@ import { AbstractCamera } from './cameras/AbstractCamera'
 import { DirectedCamera } from './cameras/DirectedCamera'
 import { FollowCamera } from './cameras/FollowCamera'
 import { GUI } from './GUI'
+import { DollyCamera } from './cameras/DollyCamera'
 
 export class MainGame extends AbstractGame {
   wallGenerator: AbstractWallGenerator
@@ -35,6 +36,7 @@ export class MainGame extends AbstractGame {
   init() {
     this.cameras.push(new FreeViewCamera())
     this.cameras.push(new DirectedCamera())
+    this.cameras.push(new DollyCamera())
     this.followCamera = new FollowCamera()
     this.cameras.push(this.followCamera)
 

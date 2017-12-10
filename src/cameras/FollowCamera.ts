@@ -22,11 +22,9 @@ export class FollowCamera extends AbstractCamera {
     this.viewTarget = this.target.position.clone().add(this.direction.clone().multiply(lookahead))
 
     if (this.direction && this.direction.length() > 0) {
-      const mx = new THREE.Matrix4().lookAt(
-        this.threeJsCamera.position,
-        this.viewTarget,
-        new THREE.Vector3(0, 1, 0))
-      const endQuaternion = new THREE.Quaternion().setFromRotationMatrix(mx)
+      const camera = this.threeJsCamera.clone()
+      camera.lookAt(this.viewTarget)
+      const endQuaternion =  camera.quaternion
 
       this.threeJsCamera.quaternion.slerp(endQuaternion, 0.1)
     }
