@@ -3,6 +3,11 @@ declare module '*.svg' {
   export = value
 }
 
+declare module '*.jpg' {
+  var value: string
+  export = value
+}
+
 declare interface Line {
   x1: number
   y1: number

@@ -22,7 +22,10 @@
   },
   "dependencies": {
     "@types/three": "^0.84.27",
+    "file-loader": "^1.1.5",
+    "img-loader": "^2.0.0",
     "three": "^0.87.1",
-    "three-trackballcontrols": "0.0.6"
+    "three-trackballcontrols": "0.0.6",
+    "url-loader": "^0.6.2"
   }
 }

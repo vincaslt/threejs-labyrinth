@@ -40,6 +40,15 @@ module.exports = {
                 exclude: /node_modules/,
                 use: 'tslint-loader'
             },
+            {
+                enforce: 'pre',
+                test: /\.jpg$/,
+                exclude: /node_modules/,
+                use: [
+                    'url-loader?limit=10000',
+                    'img-loader'
+                ]
+            },
 
             /****************
             * LOADERS

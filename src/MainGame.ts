@@ -11,6 +11,7 @@ export class MainGame extends AbstractGame {
   wallGenerator: AbstractWallGenerator
   walls: THREE.Mesh[]
   controls: any
+  rock: THREE.Object3D
 
   constructor(config: GameConfig) {
     super(config)
@@ -43,17 +44,19 @@ export class MainGame extends AbstractGame {
     this.walls = this.wallGenerator.generateWalls(mazeLines)
     const lights = LightGenerator.generateLights()
 
-    const rock = RockGenerator.generateRock()
-    rock.position.x = 170
-    rock.position.y = 7
-    rock.position.z = 305
-    rock.castShadow = true
-    rock.receiveShadow = true
+    this.rock = RockGenerator.generateRock()
+    this.rock.position.x = 170
+    this.rock.position.y = 7
+    this.rock.position.z = 305
+    this.rock.castShadow = true
+    this.rock.receiveShadow = true
+    this.rock.scale.set(3, 3, 3)
 
-    this.scene.add(...this.walls, floor, rock, ambientLight, ...lights)
+    this.scene.add(...this.walls, floor, this.rock, ambientLight, ...lights)
   }
 
   render() {
+    this.rock.rotateY(3 * Math.PI / 180)
   }
 
   update() {
