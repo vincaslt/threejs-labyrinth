@@ -9,8 +9,9 @@ export class RollingBall {
   ball: THREE.Object3D
   scene: THREE.Scene
   path: THREE.Vector3[]
-  activePoint = 0
   direction: THREE.Vector3
+  goingBack = false
+  activePoint = 0
 
   constructor(scene: THREE.Scene) {
     const ballGeometry = new THREE.SphereGeometry(3, 30, 30)
@@ -27,9 +28,7 @@ export class RollingBall {
   }
 
   move() {
-    const point = this.path[this.activePoint]
-    if (!point) return
-
+    let point = this.path[this.activePoint]
     this.direction.subVectors(point, this.ball.position).normalize()
     this.ball.rotateZ(this.direction.x * -20 * Math.PI / 180)
     this.ball.rotateX(this.direction.z * 20 * Math.PI / 180)
@@ -38,7 +37,11 @@ export class RollingBall {
       this.ball.position.set(point.x, point.y, point.z)
       var mx = new THREE.Matrix4().lookAt(this.ball.position, point, new THREE.Vector3(0, 1, 0))
       this.ball.quaternion.setFromRotationMatrix(mx)
-      this.activePoint += 1
+      this.activePoint += this.goingBack ? -1 : 1
+      if (!this.path[this.activePoint]) {
+        this.goingBack = !this.goingBack
+        this.activePoint += this.goingBack ? -1 : 1
+      }
       return
     } else {
       this.ball.position.add(this.direction.multiply(velocity))
